@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tienda Market</title>
+  <title>Market</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="app" class="hidden">
-    <!-- NAVBAR SUPERIOR -->
+    <!-- NAV -->
     <header class="navbar">
       <div class="logo">🛍️ Market</div>
       <input type="text" placeholder="Buscar productos..." />
@@ -18,45 +18,60 @@
       </div>
     </header>
 
-    <!-- MENÚ LATERAL + CONTENIDO -->
+    <!-- CONTENIDO -->
     <main class="main-content">
       <aside class="sidebar">
         <h3>Categorías</h3>
         <ul>
-          <li>🛋️ Muebles</li>
-          <li>🧸 Decoración</li>
-          <li>🛏️ Dormitorio</li>
-          <li>🛒 Accesorios</li>
+          <li data-category="todos">📦 Ver Todos</li>
+          <li data-category="muebles">🛋️ Muebles</li>
+          <ul class="subcategoria">
+            <li data-sub="sillas">Sillas</li>
+            <li data-sub="mesas">Mesas</li>
+          </ul>
+          <li data-category="decoracion">🧸 Decoración</li>
+          <li data-category="dormitorio">🛏️ Dormitorio</li>
+          <li data-category="accesorios">🛒 Accesorios</li>
         </ul>
       </aside>
 
       <section class="products">
         <h2>Ofertas del Día</h2>
         <div class="product-grid">
-          <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 1" />
+          <div class="product" data-category="muebles" data-sub="sillas">
+            <img src="https://via.placeholder.com/150" alt="Silla" />
             <h4>Silla Moderna</h4>
             <p>$45.00</p>
           </div>
-          <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 2" />
+          <div class="product" data-category="muebles" data-sub="mesas">
+            <img src="https://via.placeholder.com/150" alt="Mesa" />
+            <h4>Mesa de Madera</h4>
+            <p>$85.00</p>
+          </div>
+          <div class="product" data-category="decoracion">
+            <img src="https://via.placeholder.com/150" alt="Almohadas" />
             <h4>Almohadas Coloridas</h4>
             <p>$25.00</p>
           </div>
-          <div class="product">
-            <img src="https://via.placeholder.com/150" alt="Producto 3" />
+          <div class="product" data-category="accesorios">
+            <img src="https://via.placeholder.com/150" alt="Toalla" />
             <h4>Toalla de Microfibra</h4>
             <p>$18.00</p>
+          </div>
+          <div class="product" data-category="dormitorio">
+            <img src="https://via.placeholder.com/150" alt="Cama" />
+            <h4>Juego de Sábanas</h4>
+            <p>$60.00</p>
           </div>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- FORMULARIO DE LOGIN/REGISTRO -->
+  <!-- FORM LOGIN -->
   <div id="auth" class="auth-container">
     <h2>Inicia sesión o regístrate</h2>
-    <input type="text" id="username" placeholder="Nombre de usuario" />
+    <input type="text" id="username" placeholder="Usuario" />
     <input type="password" id="password" placeholder="Contraseña" />
     <button onclick="login()">Iniciar sesión</button>
     <button onclick="register()">Registrarse</button>

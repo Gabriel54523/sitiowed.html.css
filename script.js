@@ -1,4 +1,4 @@
- // Mostrar u ocultar contenido según sesión
+ // Mostrar u ocultar login
 window.onload = () => {
   const user = localStorage.getItem("user");
   if (user) {
@@ -39,9 +39,33 @@ function login() {
   }
 }
 
-// Cerrar sesión
+// Logout
 document.getElementById("logout").addEventListener("click", () => {
   localStorage.removeItem("user");
   localStorage.removeItem("pass");
   location.reload();
+});
+
+// Filtro por categoría y subcategoría
+document.querySelectorAll(".sidebar li").forEach((item) => {
+  item.addEventListener("click", () => {
+    const category = item.getAttribute("data-category");
+    const sub = item.getAttribute("data-sub");
+    const products = document.querySelectorAll(".product");
+
+    products.forEach((product) => {
+      const prodCat = product.getAttribute("data-category");
+      const prodSub = product.getAttribute("data-sub");
+
+      if (category === "todos") {
+        product.style.display = "block";
+      } else if (category && prodCat === category) {
+        product.style.display = "block";
+      } else if (sub && prodSub === sub) {
+        product.style.display = "block";
+      } else {
+        product.style.display = "none";
+      }
+    });
+  });
 });
