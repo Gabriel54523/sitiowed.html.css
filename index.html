@@ -1,83 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Market</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Online</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app" class="hidden">
-    <!-- NAV -->
-    <header class="navbar">
-      <div class="logo">🛍️ Market</div>
-      <input type="text" placeholder="Buscar productos..." />
-      <div class="icons">
-        <span id="logout">Cerrar sesión</span>
-        <span>🛒 Carrito</span>
-      </div>
+    <header>
+        <h1>Bienvenido a nuestra Tienda Online</h1>
+        <nav>
+            <button id="loginBtn">Iniciar Sesión</button>
+            <button id="registerBtn">Registrarse</button>
+            <input type="text" id="search" placeholder="Buscar productos...">
+        </nav>
     </header>
 
-    <!-- CONTENIDO -->
-    <main class="main-content">
-      <aside class="sidebar">
-        <h3>Categorías</h3>
-        <ul>
-          <li data-category="todos">📦 Ver Todos</li>
-          <li data-category="muebles">🛋️ Muebles</li>
-          <ul class="subcategoria">
-            <li data-sub="sillas">Sillas</li>
-            <li data-sub="mesas">Mesas</li>
-          </ul>
-          <li data-category="decoracion">🧸 Decoración</li>
-          <li data-category="dormitorio">🛏️ Dormitorio</li>
-          <li data-category="accesorios">🛒 Accesorios</li>
-        </ul>
-      </aside>
-
-      <section class="products">
-        <h2>Ofertas del Día</h2>
-        <div class="product-grid">
-          <div class="product" data-category="muebles" data-sub="sillas">
-            <img src="https://via.placeholder.com/150" alt="Silla" />
-            <h4>Silla Moderna</h4>
-            <p>$45.00</p>
-          </div>
-          <div class="product" data-category="muebles" data-sub="mesas">
-            <img src="https://via.placeholder.com/150" alt="Mesa" />
-            <h4>Mesa de Madera</h4>
-            <p>$85.00</p>
-          </div>
-          <div class="product" data-category="decoracion">
-            <img src="https://via.placeholder.com/150" alt="Almohadas" />
-            <h4>Almohadas Coloridas</h4>
-            <p>$25.00</p>
-          </div>
-          <div class="product" data-category="accesorios">
-            <img src="https://via.placeholder.com/150" alt="Toalla" />
-            <h4>Toalla de Microfibra</h4>
-            <p>$18.00</p>
-          </div>
-          <div class="product" data-category="dormitorio">
-            <img src="https://via.placeholder.com/150" alt="Cama" />
-            <h4>Juego de Sábanas</h4>
-            <p>$60.00</p>
-          </div>
+    <section id="categories">
+        <h2>Categorías</h2>
+        <div id="product-category" class="category">
+            <!-- Aquí se cargarán los productos -->
         </div>
-      </section>
-    </main>
-  </div>
+    </section>
 
-  <!-- FORM LOGIN -->
-  <div id="auth" class="auth-container">
-    <h2>Inicia sesión o regístrate</h2>
-    <input type="text" id="username" placeholder="Usuario" />
-    <input type="password" id="password" placeholder="Contraseña" />
-    <button onclick="login()">Iniciar sesión</button>
-    <button onclick="register()">Registrarse</button>
-    <p id="auth-msg"></p>
-  </div>
+    <section id="cart">
+        <h2>Carrito</h2>
+        <ul id="cart-list">
+            <!-- Los productos del carrito se mostrarán aquí -->
+        </ul>
+        <button id="checkoutBtn">Realizar Pedido</button>
+    </section>
 
-  <script src="script.js"></script>
+    <section id="orderForm" class="hidden">
+        <h2>Formulario de Pedido</h2>
+        <form id="orderFormContent">
+            <input type="text" id="fullName" placeholder="Nombre Completo" required>
+            <input type="text" id="idNumber" placeholder="Número de Cédula" required>
+            <input type="email" id="email" placeholder="Correo Electrónico" required>
+            <input type="tel" id="phoneNumber" placeholder="Número de Celular" required>
+            <button type="submit">Enviar Pedido</button>
+        </form>
+    </section>
+
+    <script src="script.js"></script>
 </body>
 </html>
