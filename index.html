@@ -1,108 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Tienda Segura</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda Market</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div id="theme-selector">
-      <label for="theme">🎨 Tema:</label>
-      <select id="theme" onchange="cambiarTema()">
-        <option value="moderno">Moderno</option>
-        <option value="oscuro">Oscuro</option>
-        <option value="claro">Claro</option>
-      </select>
-    </div>
-    <h1>Mi Tienda Segura</h1>
-  </header>
-
-  <main>
-    <!-- Inicio de sesión -->
-    <section id="login" class="card">
-      <h2>Iniciar Sesión</h2>
-      <form id="login-form" onsubmit="return iniciarSesion(event)">
-        <input type="text" id="login-usuario" placeholder="Usuario" required>
-        <input type="password" id="login-clave" placeholder="Contraseña" required>
-        <button type="submit">Ingresar</button>
-        <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a></p>
-      </form>
-    </section>
-
-    <!-- Registro de usuario -->
-    <section id="registro" class="card hidden">
-      <h2>Registro</h2>
-      <form id="registro-form" onsubmit="return registrarUsuario(event)">
-        <input type="text" id="registro-usuario" placeholder="Usuario" required>
-        <input type="password" id="registro-clave" placeholder="Contraseña" required>
-        <button type="submit">Registrarse</button>
-        <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión</a></p>
-      </form>
-    </section>
-
-    <!-- Tienda -->
-    <section id="tienda" class="hidden">
-      <h2>Bienvenido a la tienda</h2>
-      <div class="productos-grid">
-        <div class="productos-categoria">
-          <h3>Zapatos</h3>
-          <div class="productos" id="productos-zapatos"></div>
-        </div>
-        <div class="productos-categoria">
-          <h3>Ropa</h3>
-          <div class="productos" id="productos-ropa"></div>
-        </div>
-        <div class="productos-categoria">
-          <h3>Electrónica</h3>
-          <div class="productos" id="productos-electronica"></div>
-          <img src="IMAGENES/475888008_1023464233145834_1174974386912709651_n.jpg" alt="Electrónica">
-        </div>
-        <div class="productos-categoria">
-          <h3>Alimentos</h3>
-          <div class="productos" id="productos-alimentos"></div>
-          <img src="IMAGENES/475801825_9100726610041784_2612198679303123788_n.jpg" alt="Alimentos">
-        </div>
-        <div class="productos-categoria">
-          <h3>Juguetes</h3>
-          <div class="productos" id="productos-juguetes"></div>
-          <img src="IMAGENES/R (1).jpg" alt="Juguetes">
-        </div>
-        <div class="productos-categoria">
-          <h3>Bragas</h3>
-          <div class="productos" id="productos-bragas"></div>
-          <img src="IMAGENES/475762843_122180808068091688_7700420012870917458_n.jpg" alt="Bragas">
-        </div>
+  <div id="app" class="hidden">
+    <!-- NAVBAR SUPERIOR -->
+    <header class="navbar">
+      <div class="logo">🛍️ Market</div>
+      <input type="text" placeholder="Buscar productos..." />
+      <div class="icons">
+        <span id="logout">Cerrar sesión</span>
+        <span>🛒 Carrito</span>
       </div>
-      <button onclick="verCarrito()">🛒 Ver Carrito</button>
-    </section>
+    </header>
 
-    <!-- Carrito -->
-    <section id="carrito" class="hidden card">
-      <h2>Carrito de Compras</h2>
-      <ul id="carrito-lista"></ul>
-      <p id="total-carrito"></p>
-      <button onclick="realizarPago()">💳 Realizar Pago</button>
-      <button onclick="volverATienda()">🔙 Volver a la tienda</button>
-    </section>
+    <!-- MENÚ LATERAL + CONTENIDO -->
+    <main class="main-content">
+      <aside class="sidebar">
+        <h3>Categorías</h3>
+        <ul>
+          <li>🛋️ Muebles</li>
+          <li>🧸 Decoración</li>
+          <li>🛏️ Dormitorio</li>
+          <li>🛒 Accesorios</li>
+        </ul>
+      </aside>
 
-    <!-- Sección de pago -->
-    <section id="seccion-pago" class="hidden card">
-      <h2>Procesar Pago</h2>
-      <p><strong>Total a pagar:</strong> <span id="monto-total"></span></p>
-      <form id="form-pago" onsubmit="return confirmarPago(event)">
-        <input type="text" id="nombre-titular" placeholder="Tu nombre completo" required>
-        <input type="text" id="numero-confirmacion" placeholder="Número de confirmación o ID de pago" required>
-        <button type="submit">✅ Confirmar Pago</button>
-        <button type="button" onclick="cancelarPago()">❌ Cancelar</button>
-      </form>
-    </section>
-  </main>
+      <section class="products">
+        <h2>Ofertas del Día</h2>
+        <div class="product-grid">
+          <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 1" />
+            <h4>Silla Moderna</h4>
+            <p>$45.00</p>
+          </div>
+          <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 2" />
+            <h4>Almohadas Coloridas</h4>
+            <p>$25.00</p>
+          </div>
+          <div class="product">
+            <img src="https://via.placeholder.com/150" alt="Producto 3" />
+            <h4>Toalla de Microfibra</h4>
+            <p>$18.00</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 
-  <footer>
-    <p>© 2025 Mi Tienda Segura. Todos los derechos reservados.</p>
-  </footer>
+  <!-- FORMULARIO DE LOGIN/REGISTRO -->
+  <div id="auth" class="auth-container">
+    <h2>Inicia sesión o regístrate</h2>
+    <input type="text" id="username" placeholder="Nombre de usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button onclick="login()">Iniciar sesión</button>
+    <button onclick="register()">Registrarse</button>
+    <p id="auth-msg"></p>
+  </div>
 
   <script src="script.js"></script>
 </body>
