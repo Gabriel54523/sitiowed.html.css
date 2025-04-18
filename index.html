@@ -6,21 +6,18 @@
   <title>Tienda Online</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Estilos para animar la aparición de la tienda */
     .hidden {
       display: none;
     }
     .fade-in {
-      animation: fadeIn 0.5s ease-in-out forwards;
+      animation: fadeIn 1s ease-in;
     }
     @keyframes fadeIn {
-      0% {
+      from {
         opacity: 0;
-        transform: translateY(50px);
       }
-      100% {
+      to {
         opacity: 1;
-        transform: translateY(0);
       }
     }
   </style>
@@ -47,7 +44,7 @@
     </div>
   </section>
 
-  <!-- TIENDA (SECCIÓN OCULTA AL PRINCIPIO) -->
+  <!-- TIENDA -->
   <div id="store" class="hidden">
     <header>
       <h1>Tienda Online</h1>
@@ -58,69 +55,24 @@
       <section id="categories">
         <h2>Categorías</h2>
 
-        <!-- Categoría Zapatos -->
         <div class="category" data-category="Zapatos">
           <h3>Zapatos</h3>
           <div class="product-container" id="cat-zapatos">
-            <!-- Producto 1 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Zapato 1">
-              <p>Zapato Deportivo</p>
-              <p>$50</p>
-              <button onclick="addToCart('Zapato Deportivo', 50)">Agregar al carrito</button>
-            </div>
-            <!-- Producto 2 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Zapato 2">
-              <p>Zapato Formal</p>
-              <p>$80</p>
-              <button onclick="addToCart('Zapato Formal', 80)">Agregar al carrito</button>
-            </div>
-            <!-- Agrega hasta 10 productos más aquí -->
+            <!-- Aquí agregarás los productos de "Zapatos" -->
           </div>
         </div>
 
-        <!-- Categoría Ropa -->
         <div class="category" data-category="Ropa">
           <h3>Ropa</h3>
           <div class="product-container" id="cat-ropa">
-            <!-- Producto 1 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Camisa 1">
-              <p>Camisa Casual</p>
-              <p>$30</p>
-              <button onclick="addToCart('Camisa Casual', 30)">Agregar al carrito</button>
-            </div>
-            <!-- Producto 2 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Camisa 2">
-              <p>Camisa Formal</p>
-              <p>$40</p>
-              <button onclick="addToCart('Camisa Formal', 40)">Agregar al carrito</button>
-            </div>
-            <!-- Agrega hasta 10 productos más aquí -->
+            <!-- Aquí agregarás los productos de "Ropa" -->
           </div>
         </div>
 
-        <!-- Categoría Accesorios -->
         <div class="category" data-category="Accesorios">
           <h3>Accesorios</h3>
           <div class="product-container" id="cat-accesorios">
-            <!-- Producto 1 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Gorra 1">
-              <p>Gorra Deportiva</p>
-              <p>$20</p>
-              <button onclick="addToCart('Gorra Deportiva', 20)">Agregar al carrito</button>
-            </div>
-            <!-- Producto 2 -->
-            <div class="product">
-              <img src="https://via.placeholder.com/150" alt="Gorra 2">
-              <p>Gorra Casual</p>
-              <p>$25</p>
-              <button onclick="addToCart('Gorra Casual', 25)">Agregar al carrito</button>
-            </div>
-            <!-- Agrega hasta 10 productos más aquí -->
+            <!-- Aquí agregarás los productos de "Accesorios" -->
           </div>
         </div>
 
@@ -145,6 +97,133 @@
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Llamamos a las secciones del HTML
+    const authSection = document.getElementById('auth-section');
+    const storeSection = document.getElementById('store');
+    const registerForm = document.getElementById('register-form');
+    const loginForm = document.getElementById('login-form');
+    const orderFormSection = document.getElementById('orderForm'); // Sección del formulario de pedido
+    const checkoutBtn = document.getElementById('checkoutBtn'); // Botón de "Realizar Pedido"
+    const cartList = document.getElementById('cart-list'); // Lista de carrito
+
+    // Carrito de compras
+    let cart = [];
+
+    // Función para registrar al usuario
+    function register() {
+      const username = document.getElementById('reg-username').value;
+      const password = document.getElementById('reg-password').value;
+
+      // Verificamos si los campos están llenos
+      if (username && password) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+
+        alert('Registro exitoso!');
+        showStore();
+      } else {
+        alert('Por favor, ingresa todos los datos');
+      }
+    }
+
+    // Función para iniciar sesión
+    function login() {
+      const username = document.getElementById('login-username').value;
+      const password = document.getElementById('login-password').value;
+
+      const storedUsername = localStorage.getItem('username');
+      const storedPassword = localStorage.getItem('password');
+
+      // Verificamos si el usuario y contraseña coinciden
+      if (username === storedUsername && password === storedPassword) {
+        alert('Inicio de sesión exitoso!');
+        showStore();
+      } else {
+        alert('Credenciales incorrectas');
+      }
+    }
+
+    // Función para mostrar la tienda
+    function showStore() {
+      // Ocultamos el formulario de inicio de sesión y registro
+      authSection.style.display = 'none';
+
+      // Mostramos la tienda con una animación
+      storeSection.classList.remove('hidden');
+      storeSection.classList.add('fade-in');
+    }
+
+    // Función para agregar productos al carrito
+    function addToCart(productName, productPrice) {
+      const product = { name: productName, price: productPrice };
+      cart.push(product);
+      updateCart();
+    }
+
+    // Función para actualizar la lista del carrito
+    function updateCart() {
+      cartList.innerHTML = '';
+
+      cart.forEach(product => {
+        const li = document.createElement('li');
+        li.textContent = `${product.name} - $${product.price}`;
+        cartList.appendChild(li);
+      });
+    }
+
+    // Mostrar el formulario de pedido cuando el usuario haga clic en "Realizar Pedido"
+    checkoutBtn.addEventListener('click', function () {
+      // Si el carrito está vacío, mostramos un mensaje de alerta
+      if (cart.length === 0) {
+        alert('Tu carrito está vacío. Por favor, agrega productos antes de realizar el pedido.');
+      } else {
+        // Mostrar la sección del formulario de pedido
+        orderFormSection.classList.remove('hidden');
+        orderFormSection.classList.add('fade-in');
+      }
+    });
+
+    // Enviar el pedido al hacer clic en el formulario
+    document.getElementById('orderFormContent').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevenimos la acción por defecto del formulario (recargar la página)
+
+      // Recoger los datos del formulario
+      const fullName = document.getElementById('fullName').value;
+      const idNumber = document.getElementById('idNumber').value;
+      const email = document.getElementById('email').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+
+      // Verificar que los campos no estén vacíos
+      if (fullName && idNumber && email && phoneNumber) {
+        // Guardar los datos del pedido en el LocalStorage
+        const orderData = {
+          fullName,
+          idNumber,
+          email,
+          phoneNumber,
+          cart
+        };
+
+        localStorage.setItem('orderData', JSON.stringify(orderData));
+
+        // Mostrar mensaje de confirmación
+        alert('¡Pedido realizado con éxito!');
+
+        // Limpiar el carrito después de realizar el pedido
+        cart = [];
+        updateCart();
+
+        // Ocultar el formulario de pedido
+        orderFormSection.classList.add('hidden');
+      } else {
+        alert('Por favor, llena todos los campos del formulario.');
+      }
+    });
+
+    // Agregar productos de ejemplo al carrito para probar la funcionalidad
+    addToCart('Zapato Deportivo', 50);
+    addToCart('Camisa Azul', 25);
+  </script>
 </body>
 </html>
