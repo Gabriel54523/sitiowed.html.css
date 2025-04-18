@@ -1,69 +1,45 @@
-:root {
-    --bg-color: #ff6f61;
-    --panel-color: #ffffff;
-    --button-color: #ff9a8b;
-    --text-color: #333333;
-    --hover-button: #ff4666;
-  }
-  
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: var(--bg-color);
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    flex-direction: column;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  #theme-selector {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  
-  #login, #registro, #tienda, #carrito, #seccion-pago {
-    background-color: var(--panel-color);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    text-align: center;
-    width: 90%;
-    max-width: 600px;
-    margin: 20px 0;
-  }
-  
-  .productos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-  }
-  
-  .producto {
-    background-color: #fdfdfd;
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  button {
-    background-color: var(--button-color);
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: var(--hover-button);
-  }
-  
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+header {
+  background-color: #0078d7;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 1rem auto;
+  padding: 1rem;
+  max-width: 400px;
+}
+
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.productos-categoria img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #0078d7;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
