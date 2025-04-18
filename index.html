@@ -1,47 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda Online</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda Online</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+  <!-- FORMULARIO DE ACCESO -->
+  <section id="auth-section">
+    <h2>Bienvenido</h2>
+    <div id="auth-forms">
+      <div id="register-form">
+        <h3>Registrarse</h3>
+        <input type="text" id="reg-username" placeholder="Nombre de usuario" required>
+        <input type="password" id="reg-password" placeholder="Contraseña" required>
+        <button onclick="register()">Registrarse</button>
+      </div>
+
+      <div id="login-form">
+        <h3>Iniciar Sesión</h3>
+        <input type="text" id="login-username" placeholder="Nombre de usuario" required>
+        <input type="password" id="login-password" placeholder="Contraseña" required>
+        <button onclick="login()">Iniciar Sesión</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIENDA -->
+  <div id="store" class="hidden">
     <header>
-        <h1>Bienvenido a nuestra Tienda Online</h1>
-        <nav>
-            <button id="loginBtn">Iniciar Sesión</button>
-            <button id="registerBtn">Registrarse</button>
-            <input type="text" id="search" placeholder="Buscar productos...">
-        </nav>
+      <h1>Tienda Online</h1>
+      <input type="text" id="search" placeholder="Buscar productos..." />
     </header>
 
-    <section id="categories">
+    <main>
+      <section id="categories">
         <h2>Categorías</h2>
-        <div id="product-category" class="category">
-            <!-- Aquí se cargarán los productos -->
+
+        <div class="category" data-category="Zapatos">
+          <h3>Zapatos</h3>
+          <div class="product-container" id="cat-zapatos"></div>
         </div>
-    </section>
 
-    <section id="cart">
+        <div class="category" data-category="Ropa">
+          <h3>Ropa</h3>
+          <div class="product-container" id="cat-ropa"></div>
+        </div>
+
+        <div class="category" data-category="Accesorios">
+          <h3>Accesorios</h3>
+          <div class="product-container" id="cat-accesorios"></div>
+        </div>
+
+      </section>
+
+      <section id="cart">
         <h2>Carrito</h2>
-        <ul id="cart-list">
-            <!-- Los productos del carrito se mostrarán aquí -->
-        </ul>
+        <ul id="cart-list"></ul>
         <button id="checkoutBtn">Realizar Pedido</button>
-    </section>
+      </section>
 
-    <section id="orderForm" class="hidden">
+      <section id="orderForm" class="hidden">
         <h2>Formulario de Pedido</h2>
         <form id="orderFormContent">
-            <input type="text" id="fullName" placeholder="Nombre Completo" required>
-            <input type="text" id="idNumber" placeholder="Número de Cédula" required>
-            <input type="email" id="email" placeholder="Correo Electrónico" required>
-            <input type="tel" id="phoneNumber" placeholder="Número de Celular" required>
-            <button type="submit">Enviar Pedido</button>
+          <input type="text" id="fullName" placeholder="Nombre Completo" required />
+          <input type="text" id="idNumber" placeholder="Número de Cédula" required />
+          <input type="email" id="email" placeholder="Correo Electrónico" required />
+          <input type="tel" id="phoneNumber" placeholder="Número de Celular" required />
+          <button type="submit">Enviar Pedido</button>
         </form>
-    </section>
+      </section>
+    </main>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
