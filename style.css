@@ -1,0 +1,69 @@
+:root {
+    --bg-color: #ff6f61;
+    --panel-color: #ffffff;
+    --button-color: #ff9a8b;
+    --text-color: #333333;
+    --hover-button: #ff4666;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #theme-selector {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
+  #login, #registro, #tienda, #carrito, #seccion-pago {
+    background-color: var(--panel-color);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    margin: 20px 0;
+  }
+  
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  
+  .producto {
+    background-color: #fdfdfd;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  button {
+    background-color: var(--button-color);
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: var(--hover-button);
+  }
+  

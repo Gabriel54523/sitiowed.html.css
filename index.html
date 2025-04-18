@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Mi Tienda Segura</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="theme-selector">
+    <label for="theme">🎨 Tema:</label>
+    <select id="theme" onchange="cambiarTema()">
+      <option value="moderno">Moderno</option>
+      <option value="oscuro">Oscuro</option>
+      <option value="claro">Claro</option>
+    </select>
+  </div>
+
+  <!-- Inicio de sesión -->
+  <div id="login">
+    <h2>Iniciar Sesión</h2>
+    <form id="login-form" onsubmit="return iniciarSesion(event)">
+      <input type="text" id="login-usuario" placeholder="Usuario" required>
+      <input type="password" id="login-clave" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+      <p>¿No tienes cuenta? <a href="#" onclick="mostrarRegistro()">Regístrate aquí</a></p>
+    </form>
+  </div>
+
+  <!-- Registro de usuario -->
+  <div id="registro" class="hidden">
+    <h2>Registro</h2>
+    <form id="registro-form" onsubmit="return registrarUsuario(event)">
+      <input type="text" id="registro-usuario" placeholder="Usuario" required>
+      <input type="password" id="registro-clave" placeholder="Contraseña" required>
+      <button type="submit">Registrarse</button>
+      <p>¿Ya tienes cuenta? <a href="#" onclick="mostrarLogin()">Inicia sesión</a></p>
+    </form>
+  </div>
+
+  <!-- Tienda -->
+  <div id="tienda" class="hidden">
+    <h2>Bienvenido a la tienda</h2>
+
+    <!-- Secciones por categoría -->
+    <div class="productos-categoria">
+      <h3>Zapatos</h3>
+      <div class="productos" id="productos-zapatos"></div>
+    </div>
+
+    <div class="productos-categoria">
+      <h3>Ropa</h3>
+      <div class="productos" id="productos-ropa"></div>
+    </div>
+
+    <div class="productos-categoria">
+      <h3>Electrónica</h3>
+      <div class="productos" id="productos-electronica"></div>
+    </div>
+
+    <div class="productos-categoria">
+      <h3>Alimentos</h3>
+      <div class="productos" id="productos-alimentos"></div>
+    </div>
+
+    <button onclick="verCarrito()">🛒 Ver Carrito</button>
+  </div>
+
+  <!-- Carrito -->
+  <div id="carrito" class="hidden">
+    <h2>Carrito de Compras</h2>
+    <ul id="carrito-lista"></ul>
+    <p id="total-carrito"></p>
+    <button onclick="realizarPago()">💳 Realizar Pago</button>
+    <button onclick="volverATienda()">🔙 Volver a la tienda</button>
+  </div>
+
+  <!-- Sección de pago -->
+  <div id="seccion-pago" class="hidden">
+    <h2>Procesar Pago</h2>
+    <p><strong>Total a pagar:</strong> <span id="monto-total"></span></p>
+    <form id="form-pago" onsubmit="return confirmarPago(event)">
+      <input type="text" id="nombre-titular" placeholder="Tu nombre completo" required>
+      <input type="text" id="numero-confirmacion" placeholder="Número de confirmación o ID de pago" required>
+      <button type="submit">✅ Confirmar Pago</button>
+      <button type="button" onclick="cancelarPago()">❌ Cancelar</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
