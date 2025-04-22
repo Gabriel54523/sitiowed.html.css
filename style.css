@@ -1,73 +1,83 @@
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
+  margin: 20px;
+  background-color: #f9f9f9;
 }
 
-header {
-  background-color: #333;
-  color: white;
+.hidden {
+  display: none;
+}
+
+#login-container,
+#main-container {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+input, select, textarea {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
   padding: 10px;
-  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-header nav {
-  margin-top: 10px;
-}
-
-header nav button {
-  padding: 10px;
-  margin: 5px;
-  background-color: #555;
+button {
+  padding: 10px 15px;
+  margin: 5px 5px 10px 0;
+  cursor: pointer;
+  background-color: #4CAF50;
   color: white;
   border: none;
-  cursor: pointer;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-header nav input {
-  padding: 5px;
-  margin-top: 10px;
+button:hover {
+  background-color: #388e3c;
 }
 
-#categories {
-  padding: 20px;
-  background-color: #f5f5f5;
-}
-
-.product {
-  display: inline-block;
-  width: 200px;
-  padding: 10px;
-  margin: 10px;
-  background-color: white;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-#cart {
-  padding: 20px;
-  background-color: #f5f5f5;
-}
-
-#cart ul {
+#product-list {
   list-style-type: none;
   padding: 0;
 }
 
-#orderForm {
-  display: none;
-  padding: 20px;
-  background-color: #f5f5f5;
+#product-list li {
+  background: #e0e0e0;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-#orderForm.hidden {
-  display: none;
+#product-list img {
+  max-width: 150px;
+  border-radius: 5px;
+  margin-top: 5px;
 }
 
-button {
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  border: none;
-  cursor: pointer;
+.product-buttons {
+  margin-top: 10px;
+}
+
+.product-buttons button {
+  background-color: #d32f2f;
+}
+
+.product-buttons button.edit {
+  background-color: #1976d2;
+}
+
+.product-buttons button:hover {
+  opacity: 0.9;
 }

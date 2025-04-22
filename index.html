@@ -1,229 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tienda Online</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    .hidden {
-      display: none;
-    }
-    .fade-in {
-      animation: fadeIn 1s ease-in;
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Sistema de Registro de Productos</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- FORMULARIO DE ACCESO -->
-  <section id="auth-section">
-    <h2>Bienvenido</h2>
-    <div id="auth-forms">
-      <div id="register-form">
-        <h3>Registrarse</h3>
-        <input type="text" id="reg-username" placeholder="Nombre de usuario" required>
-        <input type="password" id="reg-password" placeholder="Contraseña" required>
-        <button onclick="register()">Registrarse</button>
-      </div>
-
-      <div id="login-form">
-        <h3>Iniciar Sesión</h3>
-        <input type="text" id="login-username" placeholder="Nombre de usuario" required>
-        <input type="password" id="login-password" placeholder="Contraseña" required>
-        <button onclick="login()">Iniciar Sesión</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- TIENDA -->
-  <div id="store" class="hidden">
-    <header>
-      <h1>Tienda Online</h1>
-      <input type="text" id="search" placeholder="Buscar productos..." />
-    </header>
-
-    <main>
-      <section id="categories">
-        <h2>Categorías</h2>
-
-        <div class="category" data-category="Zapatos">
-          <h3>Zapatos</h3>
-          <div class="product-container" id="cat-zapatos">
-            <!-- Aquí agregarás los productos de "Zapatos" -->
-          </div>
-        </div>
-
-        <div class="category" data-category="Ropa">
-          <h3>Ropa</h3>
-          <div class="product-container" id="cat-ropa">
-            <!-- Aquí agregarás los productos de "Ropa" -->
-          </div>
-        </div>
-
-        <div class="category" data-category="Accesorios">
-          <h3>Accesorios</h3>
-          <div class="product-container" id="cat-accesorios">
-            <!-- Aquí agregarás los productos de "Accesorios" -->
-          </div>
-        </div>
-
-      </section>
-
-      <section id="cart">
-        <h2>Carrito</h2>
-        <ul id="cart-list"></ul>
-        <button id="checkoutBtn">Realizar Pedido</button>
-      </section>
-
-      <section id="orderForm" class="hidden">
-        <h2>Formulario de Pedido</h2>
-        <form id="orderFormContent">
-          <input type="text" id="fullName" placeholder="Nombre Completo" required />
-          <input type="text" id="idNumber" placeholder="Número de Cédula" required />
-          <input type="email" id="email" placeholder="Correo Electrónico" required />
-          <input type="tel" id="phoneNumber" placeholder="Número de Celular" required />
-          <button type="submit">Enviar Pedido</button>
-        </form>
-      </section>
-    </main>
+  <!-- LOGIN / REGISTRO -->
+  <div id="login-container">
+    <h2>Iniciar Sesión / Registrarse</h2>
+    <input type="text" id="username" placeholder="Nombre de usuario">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="login()">Entrar</button>
   </div>
 
-  <script>
-    // Llamamos a las secciones del HTML
-    const authSection = document.getElementById('auth-section');
-    const storeSection = document.getElementById('store');
-    const registerForm = document.getElementById('register-form');
-    const loginForm = document.getElementById('login-form');
-    const orderFormSection = document.getElementById('orderForm'); // Sección del formulario de pedido
-    const checkoutBtn = document.getElementById('checkoutBtn'); // Botón de "Realizar Pedido"
-    const cartList = document.getElementById('cart-list'); // Lista de carrito
+  <!-- PÁGINA PRINCIPAL -->
+  <div id="main-container" class="hidden">
+    <h2>Bienvenido, <span id="user-name"></span></h2>
+    <button onclick="logout()">Cerrar sesión</button>
+    <button onclick="toggleProductForm()">Registrar Producto</button>
+    <button onclick="clearAllProducts()">Eliminar TODOS los productos</button>
 
-    // Carrito de compras
-    let cart = [];
+    <!-- FORMULARIO DE PRODUCTO -->
+    <div id="product-form" class="hidden">
+      <h3>Nuevo Producto</h3>
+      <input type="text" id="product-name" placeholder="Nombre del producto">
+      <input type="text" id="product-price" placeholder="Precio">
+      <select id="product-category">
+        <option value="">Selecciona una categoría</option>
+        <option value="Ropa">Ropa</option>
+        <option value="Electrónica">Electrónica</option>
+        <option value="Zapatos">Zapatos</option>
+        <option value="Accesorios">Accesorios</option>
+      </select>
+      <textarea id="product-description" placeholder="Descripción del producto"></textarea>
+      <input type="file" id="product-image" accept="image/*">
+      <button onclick="addProduct()">Guardar producto</button>
+    </div>
 
-    // Función para registrar al usuario
-    function register() {
-      const username = document.getElementById('reg-username').value;
-      const password = document.getElementById('reg-password').value;
+    <!-- BÚSQUEDA -->
+    <input type="text" id="search" placeholder="Buscar producto..." oninput="searchProduct()">
 
-      // Verificamos si los campos están llenos
-      if (username && password) {
-        localStorage.setItem('username', username);
-        localStorage.setItem('password', password);
+    <!-- CONTADOR -->
+    <p>Total de productos: <span id="product-count">0</span></p>
 
-        alert('Registro exitoso!');
-        showStore();
-      } else {
-        alert('Por favor, ingresa todos los datos');
-      }
-    }
+    <!-- LISTA DE PRODUCTOS -->
+    <h3>Productos Registrados</h3>
+    <ul id="product-list"></ul>
+  </div>
 
-    // Función para iniciar sesión
-    function login() {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
-
-      const storedUsername = localStorage.getItem('username');
-      const storedPassword = localStorage.getItem('password');
-
-      // Verificamos si el usuario y contraseña coinciden
-      if (username === storedUsername && password === storedPassword) {
-        alert('Inicio de sesión exitoso!');
-        showStore();
-      } else {
-        alert('Credenciales incorrectas');
-      }
-    }
-
-    // Función para mostrar la tienda
-    function showStore() {
-      // Ocultamos el formulario de inicio de sesión y registro
-      authSection.style.display = 'none';
-
-      // Mostramos la tienda con una animación
-      storeSection.classList.remove('hidden');
-      storeSection.classList.add('fade-in');
-    }
-
-    // Función para agregar productos al carrito
-    function addToCart(productName, productPrice) {
-      const product = { name: productName, price: productPrice };
-      cart.push(product);
-      updateCart();
-    }
-
-    // Función para actualizar la lista del carrito
-    function updateCart() {
-      cartList.innerHTML = '';
-
-      cart.forEach(product => {
-        const li = document.createElement('li');
-        li.textContent = `${product.name} - $${product.price}`;
-        cartList.appendChild(li);
-      });
-    }
-
-    // Mostrar el formulario de pedido cuando el usuario haga clic en "Realizar Pedido"
-    checkoutBtn.addEventListener('click', function () {
-      // Si el carrito está vacío, mostramos un mensaje de alerta
-      if (cart.length === 0) {
-        alert('Tu carrito está vacío. Por favor, agrega productos antes de realizar el pedido.');
-      } else {
-        // Mostrar la sección del formulario de pedido
-        orderFormSection.classList.remove('hidden');
-        orderFormSection.classList.add('fade-in');
-      }
-    });
-
-    // Enviar el pedido al hacer clic en el formulario
-    document.getElementById('orderFormContent').addEventListener('submit', function (e) {
-      e.preventDefault(); // Prevenimos la acción por defecto del formulario (recargar la página)
-
-      // Recoger los datos del formulario
-      const fullName = document.getElementById('fullName').value;
-      const idNumber = document.getElementById('idNumber').value;
-      const email = document.getElementById('email').value;
-      const phoneNumber = document.getElementById('phoneNumber').value;
-
-      // Verificar que los campos no estén vacíos
-      if (fullName && idNumber && email && phoneNumber) {
-        // Guardar los datos del pedido en el LocalStorage
-        const orderData = {
-          fullName,
-          idNumber,
-          email,
-          phoneNumber,
-          cart
-        };
-
-        localStorage.setItem('orderData', JSON.stringify(orderData));
-
-        // Mostrar mensaje de confirmación
-        alert('¡Pedido realizado con éxito!');
-
-        // Limpiar el carrito después de realizar el pedido
-        cart = [];
-        updateCart();
-
-        // Ocultar el formulario de pedido
-        orderFormSection.classList.add('hidden');
-      } else {
-        alert('Por favor, llena todos los campos del formulario.');
-      }
-    });
-
-    // Agregar productos de ejemplo al carrito para probar la funcionalidad
-    addToCart('Zapato Deportivo', 50);
-    addToCart('Camisa Azul', 25);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

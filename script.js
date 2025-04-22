@@ -1,71 +1,166 @@
-  // Llamamos a las secciones del HTML
-const authSection = document.getElementById('auth-section');
-const storeSection = document.getElementById('store');
-const registerForm = document.getElementById('register-form');
-const loginForm = document.getElementById('login-form');
-
-// Carrito de compras
-let cart = [];
-
-// Función para registrar al usuario
-function register() {
-  const username = document.getElementById('reg-username').value;
-  const password = document.getElementById('reg-password').value;
-
-  // Verificamos si los campos están llenos
-  if (username && password) {
-    localStorage.setItem('username', username);
-    localStorage.setItem('password', password);
-
-    alert('Registro exitoso!');
-    showStore();
-  } else {
-    alert('Por favor, ingresa todos los datos');
+ // Cargar usuario activo al iniciar
+window.onload = () => {
+  const currentUser = localStorage.getItem('currentUser');
+  if (currentUser) {
+    showMainPage(currentUser);
   }
-}
+};
 
-// Función para iniciar sesión
 function login() {
-  const username = document.getElementById('login-username').value;
-  const password = document.getElementById('login-password').value;
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
 
-  const storedUsername = localStorage.getItem('username');
-  const storedPassword = localStorage.getItem('password');
+  if (!user || !pass) {
+    alert('Ingrese usuario y contraseña');
+    return;
+  }
 
-  // Verificamos si el usuario y contraseña coinciden
-  if (username === storedUsername && password === storedPassword) {
-    alert('Inicio de sesión exitoso!');
-    showStore();
+  let users = JSON.parse(localStorage.getItem('users')) || {};
+
+  if (!users[user]) {
+    users[user] = { password: pass, products: [] };
+  } else if (users[user].password !== pass) {
+    alert('Contraseña incorrecta');
+    return;
+  }
+
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('currentUser', user);
+  showMainPage(user);
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  location.reload();
+}
+
+function showMainPage(user) {
+  document.getElementById('login-container').classList.add('hidden');
+  document.getElementById('main-container').classList.remove('hidden');
+  document.getElementById('user-name').innerText = user;
+  loadProducts();
+}
+
+function toggleProductForm() {
+  document.getElementById('product-form').classList.toggle('hidden');
+}
+
+function addProduct() {
+  const name = document.getElementById('product-name').value;
+  const price = document.getElementById('product-price').value;
+  const category = document.getElementById('product-category').value;
+  const description = document.getElementById('product-description').value;
+  const imageInput = document.getElementById('product-image');
+
+  if (!name || !price || !category) {
+    alert("Por favor, completa todos los campos obligatorios.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    const imageData = reader.result;
+
+    const user = localStorage.getItem('currentUser');
+    let users = JSON.parse(localStorage.getItem('users'));
+
+    users[user].products.push({
+      name,
+      price,
+      category,
+      description,
+      image: imageData
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+    clearForm();
+    loadProducts();
+  };
+
+  if (imageInput.files[0]) {
+    reader.readAsDataURL(imageInput.files[0]);
   } else {
-    alert('Credenciales incorrectas');
+    reader.onload();
   }
 }
 
-// Función para mostrar la tienda
-function showStore() {
-  // Ocultamos el formulario de inicio de sesión y registro
-  authSection.style.display = 'none';
-
-  // Mostramos la tienda con una animación
-  storeSection.classList.remove('hidden');
-  storeSection.classList.add('fade-in');
+function clearForm() {
+  document.getElementById('product-name').value = '';
+  document.getElementById('product-price').value = '';
+  document.getElementById('product-category').value = '';
+  document.getElementById('product-description').value = '';
+  document.getElementById('product-image').value = '';
 }
 
-// Función para agregar productos al carrito
-function addToCart(productName, productPrice) {
-  const product = { name: productName, price: productPrice };
-  cart.push(product);
-  updateCart();
-}
+function loadProducts(filter = '') {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  let products = users[user].products;
 
-// Función para actualizar la lista del carrito
-function updateCart() {
-  const cartList = document.getElementById('cart-list');
-  cartList.innerHTML = '';
+  if (filter) {
+    products = products.filter(p =>
+      p.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
 
-  cart.forEach(product => {
-    const li = document.createElement('li');
-    li.textContent = `${product.name} - $${product.price}`;
-    cartList.appendChild(li);
+  const list = document.getElementById('product-list');
+  const count = document.getElementById('product-count');
+  list.innerHTML = '';
+  count.innerText = products.length;
+
+  products.forEach((prod, index) => {
+    let item = document.createElement('li');
+    item.innerHTML = `
+      <strong>${prod.name}</strong>
+      <span>Precio: $${prod.price}</span>
+      <span>Categoría: ${prod.category}</span>
+      <span>${prod.description}</span>
+      ${prod.image ? `<img src="${prod.image}" alt="Imagen del producto">` : ''}
+      <div class="product-buttons">
+        <button class="edit" onclick="editProduct(${index})">Editar</button>
+        <button onclick="deleteProduct(${index})">Eliminar</button>
+      </div>
+    `;
+    list.appendChild(item);
   });
+}
+
+function deleteProduct(index) {
+  if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
+
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  users[user].products.splice(index, 1);
+  localStorage.setItem('users', JSON.stringify(users));
+  loadProducts();
+}
+
+function editProduct(index) {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  let prod = users[user].products[index];
+
+  document.getElementById('product-name').value = prod.name;
+  document.getElementById('product-price').value = prod.price;
+  document.getElementById('product-category').value = prod.category;
+  document.getElementById('product-description').value = prod.description;
+
+  document.getElementById('product-form').classList.remove('hidden');
+
+  deleteProduct(index);
+}
+
+function searchProduct() {
+  const query = document.getElementById('search').value;
+  loadProducts(query);
+}
+
+function clearAllProducts() {
+  if (!confirm("¿Eliminar TODOS los productos? Esta acción no se puede deshacer.")) return;
+
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  users[user].products = [];
+  localStorage.setItem('users', JSON.stringify(users));
+  loadProducts();
 }
