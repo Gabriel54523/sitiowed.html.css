@@ -1,133 +1,193 @@
- // Variables globales
-let productos = [];
+ // Cargar usuario activo al iniciar
+window.onload = () => {
+  const currentUser = localStorage.getItem('currentUser');
+  if (currentUser) {
+    showMainPage(currentUser);
+  }
+};
 
-// Función para iniciar sesión
 function login() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
 
-  // Aquí puedes agregar un sistema de validación de login (puedes almacenar en el localStorage)
-  if (username && password) {
-    localStorage.setItem("usuario", username);
-    document.getElementById("login-container").classList.add("hidden");
-    document.getElementById("main-container").classList.remove("hidden");
-    document.getElementById("user-name").textContent = username;
-  } else {
-    alert("Por favor, ingresa tu nombre de usuario y contraseña.");
+  if (!user || !pass) {
+    alert('Ingrese usuario y contraseña');
+    return;
   }
+
+  let users = JSON.parse(localStorage.getItem('users')) || {};
+
+  if (!users[user]) {
+    users[user] = { password: pass, products: [] };
+  } else if (users[user].password !== pass) {
+    alert('Contraseña incorrecta');
+    return;
+  }
+
+  localStorage.setItem('users', JSON.stringify(users));
+  localStorage.setItem('currentUser', user);
+  showMainPage(user);
 }
 
-// Función para cerrar sesión
 function logout() {
-  localStorage.removeItem("usuario");
-  document.getElementById("login-container").classList.remove("hidden");
-  document.getElementById("main-container").classList.add("hidden");
+  localStorage.removeItem('currentUser');
+  location.reload();
 }
 
-// Función para mostrar/ocultar el formulario de producto
+function showMainPage(user) {
+  document.getElementById('login-container').classList.add('hidden');
+  document.getElementById('main-container').classList.remove('hidden');
+  document.getElementById('user-name').innerText = user;
+  loadProducts();
+}
+
 function toggleProductForm() {
-  const form = document.getElementById("product-form");
-  form.classList.toggle("hidden");
+  document.getElementById('product-form').classList.toggle('hidden');
 }
 
-// Función para agregar un producto
 function addProduct() {
-  const productName = document.getElementById("product-name").value;
-  const productPrice = document.getElementById("product-price").value;
-  const productCategory = document.getElementById("product-category").value;
-  const productDescription = document.getElementById("product-description").value;
-  const productImage = document.getElementById("product-image").files[0];
+  const name = document.getElementById('product-name').value;
+  const price = document.getElementById('product-price').value;
+  const category = document.getElementById('product-category').value;
+  const description = document.getElementById('product-description').value;
+  const imageInput = document.getElementById('product-image');
 
-  // Validar los campos
-  if (productName && productPrice && productCategory) {
-    const newProduct = {
-      name: productName,
-      price: productPrice,
-      category: productCategory,
-      description: productDescription,
-      image: productImage ? URL.createObjectURL(productImage) : null,
-    };
-
-    productos.push(newProduct);
-    updateProductList();
-    resetProductForm();
-  } else {
+  if (!name || !price || !category) {
     alert("Por favor, completa todos los campos obligatorios.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function () {
+    const imageData = reader.result;
+
+    const user = localStorage.getItem('currentUser');
+    let users = JSON.parse(localStorage.getItem('users'));
+
+    users[user].products.push({
+      name,
+      price,
+      category,
+      description,
+      image: imageData,
+      cantidad: 1 // Agregamos cantidad inicial
+    });
+
+    localStorage.setItem('users', JSON.stringify(users));
+    clearForm();
+    loadProducts();
+  };
+
+  if (imageInput.files[0]) {
+    reader.readAsDataURL(imageInput.files[0]);
+  } else {
+    reader.onload();
   }
 }
 
-// Función para resetear el formulario de producto
-function resetProductForm() {
-  document.getElementById("product-name").value = '';
-  document.getElementById("product-price").value = '';
-  document.getElementById("product-category").value = '';
-  document.getElementById("product-description").value = '';
-  document.getElementById("product-image").value = '';
-  document.getElementById("product-form").classList.add("hidden");
+function clearForm() {
+  document.getElementById('product-name').value = '';
+  document.getElementById('product-price').value = '';
+  document.getElementById('product-category').value = '';
+  document.getElementById('product-description').value = '';
+  document.getElementById('product-image').value = '';
 }
 
-// Función para actualizar la lista de productos
-function updateProductList() {
-  const productList = document.getElementById("product-list");
-  const productCount = document.getElementById("product-count");
+function loadProducts(filter = '') {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  let products = users[user].products;
 
-  // Limpiar la lista actual
-  productList.innerHTML = '';
+  if (filter) {
+    products = products.filter(p =>
+      p.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  }
 
-  // Agregar productos a la lista
-  productos.forEach((product, index) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <h4>${product.name}</h4>
-      <p>${product.category} - $${product.price}</p>
-      <p>${product.description}</p>
-      ${product.image ? `<img src="${product.image}" alt="${product.name}" width="100">` : ''}
-      <button onclick="deleteProduct(${index})">Eliminar</button>
+  const list = document.getElementById('product-list');
+  const count = document.getElementById('product-count');
+  list.innerHTML = '';
+
+  const totalCantidad = products.reduce((sum, p) => sum + (p.cantidad || 0), 0);
+  count.innerText = totalCantidad;
+
+  products.forEach((prod, index) => {
+    let item = document.createElement('li');
+    item.innerHTML = `
+      <strong>${prod.name}</strong><br>
+      <span>Precio: $${prod.price}</span><br>
+      <span>Categoría: ${prod.category}</span><br>
+      <span>${prod.description}</span><br>
+      <span><strong>Cantidad:</strong> ${prod.cantidad}</span>
+      <button onclick="sumarCantidad(${index})">➕</button>
+      <button onclick="restarCantidad(${index})">➖</button><br>
+      ${prod.image ? `<img src="${prod.image}" alt="Imagen del producto" width="100">` : ''}
+      <div class="product-buttons">
+        <button class="edit" onclick="editProduct(${index})">Editar</button>
+        <button onclick="deleteProduct(${index})">Eliminar</button>
+      </div>
     `;
-    productList.appendChild(li);
+    list.appendChild(item);
   });
-
-  // Actualizar el contador de productos
-  productCount.textContent = productos.length;
 }
 
-// Función para eliminar un producto
 function deleteProduct(index) {
-  productos.splice(index, 1);
-  updateProductList();
+  if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
+
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  users[user].products.splice(index, 1);
+  localStorage.setItem('users', JSON.stringify(users));
+  loadProducts();
 }
 
-// Función para buscar productos
+function editProduct(index) {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  let prod = users[user].products[index];
+
+  document.getElementById('product-name').value = prod.name;
+  document.getElementById('product-price').value = prod.price;
+  document.getElementById('product-category').value = prod.category;
+  document.getElementById('product-description').value = prod.description;
+
+  document.getElementById('product-form').classList.remove('hidden');
+
+  deleteProduct(index);
+}
+
 function searchProduct() {
-  const searchTerm = document.getElementById("search").value.toLowerCase();
-  const filteredProducts = productos.filter(product =>
-    product.name.toLowerCase().includes(searchTerm) ||
-    product.category.toLowerCase().includes(searchTerm) ||
-    product.description.toLowerCase().includes(searchTerm)
-  );
-
-  // Actualizar la lista con los productos filtrados
-  const productList = document.getElementById("product-list");
-  productList.innerHTML = '';
-
-  filteredProducts.forEach((product, index) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <h4>${product.name}</h4>
-      <p>${product.category} - $${product.price}</p>
-      <p>${product.description}</p>
-      ${product.image ? `<img src="${product.image}" alt="${product.name}" width="100">` : ''}
-      <button onclick="deleteProduct(${index})">Eliminar</button>
-    `;
-    productList.appendChild(li);
-  });
-
-  // Actualizar el contador de productos
-  document.getElementById("product-count").textContent = filteredProducts.length;
+  const query = document.getElementById('search').value;
+  loadProducts(query);
 }
 
-// Función para eliminar todos los productos
 function clearAllProducts() {
-  productos = [];
-  updateProductList();
+  if (!confirm("¿Eliminar TODOS los productos? Esta acción no se puede deshacer.")) return;
+
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  users[user].products = [];
+  localStorage.setItem('users', JSON.stringify(users));
+  loadProducts();
+}
+
+function sumarCantidad(index) {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+  users[user].products[index].cantidad += 1;
+  localStorage.setItem('users', JSON.stringify(users));
+  loadProducts();
+}
+
+function restarCantidad(index) {
+  const user = localStorage.getItem('currentUser');
+  let users = JSON.parse(localStorage.getItem('users'));
+
+  if (users[user].products[index].cantidad > 0) {
+    users[user].products[index].cantidad -= 1;
+    localStorage.setItem('users', JSON.stringify(users));
+    loadProducts();
+  } else {
+    alert("La cantidad no puede ser menor que cero.");
+  }
 }
