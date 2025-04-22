@@ -1,193 +1,161 @@
- // Cargar usuario activo al iniciar
-window.onload = () => {
-  const currentUser = localStorage.getItem('currentUser');
+ // script.js
+
+// Simulación de usuarios (puedes extender esto o vincularlo a un back-end luego)
+const usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("login-form");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const mainPage = document.getElementById("main-page");
+  const productSection = document.getElementById("product-section");
+  const productList = document.getElementById("product-list");
+  const carritoList = document.getElementById("carrito-list");
+  const totalSpan = document.getElementById("total");
+  const orderForm = document.getElementById("order-form");
+  const logoutBtn = document.getElementById("logout-btn");
+
+  const currentUser = localStorage.getItem("currentUser");
   if (currentUser) {
-    showMainPage(currentUser);
-  }
-};
-
-function login() {
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
-
-  if (!user || !pass) {
-    alert('Ingrese usuario y contraseña');
-    return;
+    mostrarPaginaPrincipal();
   }
 
-  let users = JSON.parse(localStorage.getItem('users')) || {};
+  loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
 
-  if (!users[user]) {
-    users[user] = { password: pass, products: [] };
-  } else if (users[user].password !== pass) {
-    alert('Contraseña incorrecta');
-    return;
+    if (!user || !pass) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    if (!usuarios[user]) {
+      usuarios[user] = { password: pass };
+      alert("Usuario registrado con éxito.");
+    } else if (usuarios[user].password !== pass) {
+      alert("Contraseña incorrecta.");
+      return;
+    }
+
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("currentUser", user);
+    mostrarPaginaPrincipal();
+  });
+
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("carrito");
+    location.reload();
+  });
+
+  function mostrarPaginaPrincipal() {
+    document.getElementById("login-page").classList.add("hidden");
+    mainPage.classList.remove("hidden");
+    cargarProductos();
+    actualizarCarrito();
   }
 
-  localStorage.setItem('users', JSON.stringify(users));
-  localStorage.setItem('currentUser', user);
-  showMainPage(user);
-}
-
-function logout() {
-  localStorage.removeItem('currentUser');
-  location.reload();
-}
-
-function showMainPage(user) {
-  document.getElementById('login-container').classList.add('hidden');
-  document.getElementById('main-container').classList.remove('hidden');
-  document.getElementById('user-name').innerText = user;
-  loadProducts();
-}
-
-function toggleProductForm() {
-  document.getElementById('product-form').classList.toggle('hidden');
-}
-
-function addProduct() {
-  const name = document.getElementById('product-name').value;
-  const price = document.getElementById('product-price').value;
-  const category = document.getElementById('product-category').value;
-  const description = document.getElementById('product-description').value;
-  const imageInput = document.getElementById('product-image');
-
-  if (!name || !price || !category) {
-    alert("Por favor, completa todos los campos obligatorios.");
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function () {
-    const imageData = reader.result;
-
-    const user = localStorage.getItem('currentUser');
-    let users = JSON.parse(localStorage.getItem('users'));
-
-    users[user].products.push({
-      name,
-      price,
-      category,
-      description,
-      image: imageData,
-      cantidad: 1 // Agregamos cantidad inicial
+  function cargarProductos() {
+    productos.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${p.imagen}" alt="${p.nombre}">
+        <h3>${p.nombre}</h3>
+        <p>${p.descripcion}</p>
+        <p>Precio: $${p.precio}</p>
+        <p>Stock: <span id="stock-${p.id}">${p.stock}</span></p>
+        <button onclick="agregarAlCarrito(${p.id})">Agregar al carrito</button>
+      `;
+      productList.appendChild(card);
     });
+  }
 
-    localStorage.setItem('users', JSON.stringify(users));
-    clearForm();
-    loadProducts();
+  window.agregarAlCarrito = function (id) {
+    const producto = obtenerProducto(id);
+    if (producto.stock <= 0) {
+      alert("Producto sin stock");
+      return;
+    }
+
+    const carrito = obtenerCarrito();
+    const item = carrito.find(p => p.id === id);
+    if (item) {
+      item.cantidad++;
+    } else {
+      carrito.push({ id, cantidad: 1 });
+    }
+
+    producto.stock--;
+    document.getElementById(`stock-${id}`).innerText = producto.stock;
+
+    guardarCarrito(carrito);
+    actualizarCarrito();
   };
 
-  if (imageInput.files[0]) {
-    reader.readAsDataURL(imageInput.files[0]);
-  } else {
-    reader.onload();
-  }
-}
+  function actualizarCarrito() {
+    const carrito = obtenerCarrito();
+    carritoList.innerHTML = "";
+    let total = 0;
 
-function clearForm() {
-  document.getElementById('product-name').value = '';
-  document.getElementById('product-price').value = '';
-  document.getElementById('product-category').value = '';
-  document.getElementById('product-description').value = '';
-  document.getElementById('product-image').value = '';
-}
+    carrito.forEach(item => {
+      const producto = obtenerProducto(item.id);
+      total += producto.precio * item.cantidad;
 
-function loadProducts(filter = '') {
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-  let products = users[user].products;
+      const li = document.createElement("li");
+      li.innerHTML = `
+        ${producto.nombre} - $${producto.precio} x ${item.cantidad}
+        <button onclick="sumar(${item.id})">+</button>
+        <button onclick="restar(${item.id})">-</button>
+      `;
+      carritoList.appendChild(li);
+    });
 
-  if (filter) {
-    products = products.filter(p =>
-      p.name.toLowerCase().includes(filter.toLowerCase())
-    );
+    totalSpan.innerText = total;
   }
 
-  const list = document.getElementById('product-list');
-  const count = document.getElementById('product-count');
-  list.innerHTML = '';
+  window.sumar = function (id) {
+    const carrito = obtenerCarrito();
+    const producto = obtenerProducto(id);
+    const item = carrito.find(p => p.id === id);
 
-  const totalCantidad = products.reduce((sum, p) => sum + (p.cantidad || 0), 0);
-  count.innerText = totalCantidad;
+    if (producto.stock <= 0) {
+      alert("No hay más stock disponible");
+      return;
+    }
 
-  products.forEach((prod, index) => {
-    let item = document.createElement('li');
-    item.innerHTML = `
-      <strong>${prod.name}</strong><br>
-      <span>Precio: $${prod.price}</span><br>
-      <span>Categoría: ${prod.category}</span><br>
-      <span>${prod.description}</span><br>
-      <span><strong>Cantidad:</strong> ${prod.cantidad}</span>
-      <button onclick="sumarCantidad(${index})">➕</button>
-      <button onclick="restarCantidad(${index})">➖</button><br>
-      ${prod.image ? `<img src="${prod.image}" alt="Imagen del producto" width="100">` : ''}
-      <div class="product-buttons">
-        <button class="edit" onclick="editProduct(${index})">Editar</button>
-        <button onclick="deleteProduct(${index})">Eliminar</button>
-      </div>
-    `;
-    list.appendChild(item);
+    item.cantidad++;
+    producto.stock--;
+    document.getElementById(`stock-${id}`).innerText = producto.stock;
+
+    guardarCarrito(carrito);
+    actualizarCarrito();
+  };
+
+  window.restar = function (id) {
+    let carrito = obtenerCarrito();
+    const producto = obtenerProducto(id);
+    const item = carrito.find(p => p.id === id);
+
+    if (item.cantidad > 1) {
+      item.cantidad--;
+    } else {
+      carrito = carrito.filter(p => p.id !== id);
+    }
+
+    producto.stock++;
+    document.getElementById(`stock-${id}`).innerText = producto.stock;
+
+    guardarCarrito(carrito);
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarCarrito();
+  };
+
+  orderForm.addEventListener("submit", e => {
+    e.preventDefault();
+    alert("¡Pedido realizado con éxito!");
+    localStorage.removeItem("carrito");
+    location.reload();
   });
-}
-
-function deleteProduct(index) {
-  if (!confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
-
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-  users[user].products.splice(index, 1);
-  localStorage.setItem('users', JSON.stringify(users));
-  loadProducts();
-}
-
-function editProduct(index) {
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-  let prod = users[user].products[index];
-
-  document.getElementById('product-name').value = prod.name;
-  document.getElementById('product-price').value = prod.price;
-  document.getElementById('product-category').value = prod.category;
-  document.getElementById('product-description').value = prod.description;
-
-  document.getElementById('product-form').classList.remove('hidden');
-
-  deleteProduct(index);
-}
-
-function searchProduct() {
-  const query = document.getElementById('search').value;
-  loadProducts(query);
-}
-
-function clearAllProducts() {
-  if (!confirm("¿Eliminar TODOS los productos? Esta acción no se puede deshacer.")) return;
-
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-  users[user].products = [];
-  localStorage.setItem('users', JSON.stringify(users));
-  loadProducts();
-}
-
-function sumarCantidad(index) {
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-  users[user].products[index].cantidad += 1;
-  localStorage.setItem('users', JSON.stringify(users));
-  loadProducts();
-}
-
-function restarCantidad(index) {
-  const user = localStorage.getItem('currentUser');
-  let users = JSON.parse(localStorage.getItem('users'));
-
-  if (users[user].products[index].cantidad > 0) {
-    users[user].products[index].cantidad -= 1;
-    localStorage.setItem('users', JSON.stringify(users));
-    loadProducts();
-  } else {
-    alert("La cantidad no puede ser menor que cero.");
-  }
-}
+});

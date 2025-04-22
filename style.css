@@ -1,83 +1,150 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f9f9f9;
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.hidden {
+/* Estilo general del body */
+body {
+  background-color: #f5f7fa;
+  color: #333;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Títulos */
+h1, h2, h3 {
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+/* Login / Registro */
+#login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+#login-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#login-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2980b9;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#login-container button:hover {
+  background-color: #1e6091;
+}
+
+/* Página principal */
+#main-container {
   display: none;
 }
 
-#login-container,
-#main-container {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 600px;
-  margin: auto;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-input, select, textarea {
+#main-container.show {
   display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  box-sizing: border-box;
 }
 
+/* Botones generales */
 button {
   padding: 10px 15px;
-  margin: 5px 5px 10px 0;
-  cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  margin: 5px;
+  cursor: pointer;
+  transition: 0.3s ease;
 }
 
 button:hover {
-  background-color: #388e3c;
+  background-color: #2a7cbf;
 }
 
+/* Formulario de producto */
+#product-form {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+#product-form input,
+#product-form textarea,
+#product-form select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Lista de productos */
 #product-list {
   list-style-type: none;
   padding: 0;
+  margin-top: 20px;
 }
 
 #product-list li {
-  background: #e0e0e0;
-  margin: 8px 0;
-  padding: 12px;
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+#product-list li img {
+  width: 100px;
+  height: auto;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  margin-top: 10px;
 }
 
-#product-list img {
-  max-width: 150px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
+/* Botones de cada producto */
 .product-buttons {
   margin-top: 10px;
 }
 
 .product-buttons button {
-  background-color: #d32f2f;
+  margin-right: 8px;
 }
 
-.product-buttons button.edit {
-  background-color: #1976d2;
+/* Contador */
+#product-count {
+  font-weight: bold;
+  color: #2c3e50;
 }
 
-.product-buttons button:hover {
-  opacity: 0.9;
-}
+/* Buscar */
+#search {
+  width: 100%;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 8px;
+  border:
