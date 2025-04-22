@@ -1,54 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Sistema de Registro de Productos</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flujo de Atención - Restaurante</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- LOGIN / REGISTRO -->
-  <div id="login-container">
-    <h2>Iniciar Sesión / Registrarse</h2>
-    <input type="text" id="username" placeholder="Nombre de usuario">
-    <input type="password" id="password" placeholder="Contraseña">
-    <button onclick="login()">Entrar</button>
+  <div class="container">
+    <h1>Diagrama de Flujo: Atención en Restaurante</h1>
+
+    <div class="step" id="step1">🔴 Llegada del cliente</div>
+    <div class="arrow">↓</div>
+
+    <div class="step">📋 Protocolo de recepción</div>
+    <div class="arrow">↓</div>
+
+    <div class="step decision">📖 ¿Cliente evalúa el menú?</div>
+    <div class="arrow">↓</div>
+
+    <div class="step">📝 Toma de la comanda</div>
+    <div class="arrow">↓</div>
+
+    <div class="step">👨‍🍳 Elaboración del pedido</div>
+    <div class="arrow">↓</div>
+
+    <div class="step">🍽️ Entrega del pedido</div>
+    <div class="arrow">↓</div>
+
+    <div class="step decision">❓¿El cliente desea algo más?</div>
+    <div class="arrow">↓</div>
+
+    <div class="step">🔁 Si: Repite desde toma de comanda</div>
+    <div class="arrow">↘️</div>
+
+    <div class="step final">🔚 No: Retirada del cliente</div>
   </div>
-
-  <!-- PÁGINA PRINCIPAL -->
-  <div id="main-container" class="hidden">
-    <h2>Bienvenido, <span id="user-name"></span></h2>
-    <button onclick="logout()">Cerrar sesión</button>
-    <button onclick="toggleProductForm()">Registrar Producto</button>
-    <button onclick="clearAllProducts()">Eliminar TODOS los productos</button>
-
-    <!-- FORMULARIO DE PRODUCTO -->
-    <div id="product-form" class="hidden">
-      <h3>Nuevo Producto</h3>
-      <input type="text" id="product-name" placeholder="Nombre del producto">
-      <input type="text" id="product-price" placeholder="Precio">
-      <select id="product-category">
-        <option value="">Selecciona una categoría</option>
-        <option value="Ropa">Ropa</option>
-        <option value="Electrónica">Electrónica</option>
-        <option value="Zapatos">Zapatos</option>
-        <option value="Accesorios">Accesorios</option>
-      </select>
-      <textarea id="product-description" placeholder="Descripción del producto"></textarea>
-      <input type="file" id="product-image" accept="image/*">
-      <button onclick="addProduct()">Guardar producto</button>
-    </div>
-
-    <!-- BÚSQUEDA -->
-    <input type="text" id="search" placeholder="Buscar producto..." oninput="searchProduct()">
-
-    <!-- CONTADOR -->
-    <p>Total de productos: <span id="product-count">0</span></p>
-
-    <!-- LISTA DE PRODUCTOS -->
-    <h3>Productos Registrados</h3>
-    <ul id="product-list"></ul>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>

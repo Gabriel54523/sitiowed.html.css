@@ -1,83 +1,65 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background-color: #f9f9f9;
-}
-
-.hidden {
-  display: none;
-}
-
-#login-container,
-#main-container {
-  background: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
   padding: 20px;
-  border-radius: 12px;
+}
+
+.container {
   max-width: 600px;
   margin: auto;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-input, select, textarea {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  box-sizing: border-box;
+h1 {
+  color: #333;
+  margin-bottom: 40px;
 }
 
-button {
-  padding: 10px 15px;
-  margin: 5px 5px 10px 0;
-  cursor: pointer;
-  background-color: #4CAF50;
+.step {
+  background-color: #007bff;
   color: white;
-  border: none;
+  padding: 16px;
   border-radius: 8px;
-  font-weight: bold;
+  margin: 10px auto;
+  font-size: 1.1em;
+  max-width: 80%;
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  background-color: #0056b3;
+}
+
+.step.decision {
+  background-color: #1d3557;
+}
+
+.step.final {
+  background-color: #d90429;
+}
+
+.arrow {
+  font-size: 24px;
+  margin: 10px;
+  color: #333;
+}
+.next-button {
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #388e3c;
-}
-
-#product-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-#product-list li {
-  background: #e0e0e0;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-#product-list img {
-  max-width: 150px;
-  border-radius: 5px;
-  margin-top: 5px;
-}
-
-.product-buttons {
-  margin-top: 10px;
-}
-
-.product-buttons button {
-  background-color: #d32f2f;
-}
-
-.product-buttons button.edit {
-  background-color: #1976d2;
-}
-
-.product-buttons button:hover {
-  opacity: 0.9;
+.next-button:hover {
+  background-color: #218838;
 }
